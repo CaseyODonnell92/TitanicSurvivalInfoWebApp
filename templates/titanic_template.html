@@ -1,4 +1,5 @@
 <html>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 	<body>
 		<h1>
 			Titanic Survival Statistics
@@ -8,11 +9,161 @@
 			died in the wreck.
 		</p>
 		<h2>Survivor Statistics</h2>
-		<canvas id="survivor-age" width="400" height="400"></canvas>
-		<canvas id="survivor-sex" width="400" height="400"></canvas>
-		<canvas id="survivor-class" width="400" height="400"></canvas>
+		<h3>Survivors by age</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="survivor-age" width="400" height="400"></canvas>
+		</div>
+		<h3>Survivors by sex</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="survivor-sex" width="400" height="400"></canvas>
+		</div>
+		
+		<h3>Survivors by cabin class</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="survivor-class" width="400" height="400"></canvas>
+		</div>
+		
+		<h2>Non-Survivor Statistics</h2>
+		<h3>Non-Survivors by age</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="non-survivor-age" width="400" height="400"></canvas>
+		</div>
+		<h3>Non-Survivors by sex</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="non-survivor-sex" width="400" height="400"></canvas>
+		</div>
+		<h3>Non-Survivors by cabin class</h3>
+		<div style="top:60px; left:10px; width:500px; height:500px;">
+			<canvas id="non-survivor-class" width="400" height="400"></canvas>
+		</div>
 	</body>
 	<script>
-		
+		//web app injects JSON declarations into these variables
+		var survAge = {{survAge | safe}}
+		var survSex = {{survSex | safe}}
+		var survClass = {{survClass | safe}}
+
+		var nonSurvAge = {{nonSurvAge | safe}}
+		var nonSurvSex = {{nonSurvSex | safe}}
+		var nonSurvClass = {{nonSurvClass | safe}}
+
+		function ageChartData(data, label) {
+			this.datasets = [{
+				data: data,
+				backgroundColor: [
+					"#FF6384",
+           			"#4BC0C0",
+            		"#FFCE56",
+            		"#E7E9ED",
+            		"#36A2EB",
+					"#B3A123"
+				],
+				label : label
+			}]
+			this.labels = [
+				"0-19",
+				"20-39",
+				"40-59",
+				"60-79",
+				">=80",
+				"Unavailable"
+			]
+		}
+
+		function sexChartData(data, label) {
+			this.datasets = [{
+				data: data,
+				backgroundColor: [
+					"#FF6384",
+           			"#4BC0C0"
+				],
+				label : label
+			}]
+			this.labels = [
+				"Male",
+				"Female"
+			]
+		}
+
+		function classChartData(data, label) {
+			this.datasets = [{
+				data: data,
+				backgroundColor: [
+					"#FF6384",
+           			"#4BC0C0",
+            		"#FFCE56"
+				],
+				label : label
+			}]
+			this.labels = [
+				"First Class",
+				"Second Class",
+				"Third Class"
+			]
+		}
+
+		var survAgeChart = document.getElementById("survivor-age");
+		new Chart(survAgeChart, {
+			type: 'pie',
+			data: new ageChartData([
+				survAge['0-19'],
+				survAge['20-39'],
+				survAge['40-59'],
+				survAge['60-79'],
+				survAge['>80'],
+				survAge['unavailable']
+			], "Survivors Classified By Age")
+		})
+
+		var survSexChart = document.getElementById("survivor-sex");
+		new Chart(survSexChart, {
+			type: 'pie',
+			data: new sexChartData([
+				survSex['male'],
+				survSex['female']
+			], "Survivors Classified by Sex")
+		})
+
+		var survClassChart = document.getElementById("survivor-class");
+		new Chart(survClassChart, {
+			type: 'pie',
+			data : new classChartData([
+				survClass['First Class'],
+				survClass['Second Class'],
+				survClass['Third Class']
+			], "Survivors Classified by Cabin Class")
+		})
+
+		var nonSurvAgeChart = document.getElementById("non-survivor-age");
+		new Chart(nonSurvAgeChart, {
+			type: 'pie',
+			data: new ageChartData([
+				nonSurvAge['0-19'],
+				nonSurvAge['20-39'],
+				nonSurvAge['40-59'],
+				nonSurvAge['60-79'],
+				nonSurvAge['>80'],
+				nonSurvAge['unavailable']
+			], "Non-Survivors Classified By Age")
+		})
+
+		var nonSurvSexChart = document.getElementById("non-survivor-sex");
+		new Chart(nonSurvSexChart, {
+			type: 'pie',
+			data: new sexChartData([
+				nonSurvSex['male'],
+				nonSurvSex['female']
+			], "Non-Survivors Classified by Sex")
+		})
+
+		var nonSurvClassChart = document.getElementById("non-survivor-class");
+		new Chart(nonSurvClassChart, {
+			type: 'pie',
+			data : new classChartData([
+				nonSurvClass['First Class'],
+				nonSurvClass['Second Class'],
+				nonSurvClass['Third Class']
+			], "Non-Survivors Classified By Cabin Class")
+		})
 	</script>
 </html>
