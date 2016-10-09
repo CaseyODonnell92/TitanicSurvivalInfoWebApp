@@ -6,7 +6,7 @@ import json
 app = Flask(__name__)
 
 @app.route('/')
-def hello_world():
+def titanic_stats():
 	data = titanic_data.get_titanic_data()
 	num_passengers = len(data)
 	survivors = []
@@ -19,8 +19,8 @@ def hello_world():
 		else:
 			survivors.append(data.pop(0))
 
-	return render_template('titanic_template.html', num_passengers = num_passengers, \
-													num_survivors = len(survivors), \
+	return render_template('titanic_template.html', num_passengers = num_passengers, 
+													num_survivors = len(survivors), 
 													num_deceased=len(deceased),
 													survAge = json.dumps(titanic_data.get_age_categories(survivors)),
 													survSex = json.dumps(titanic_data.get_gender(survivors)),
